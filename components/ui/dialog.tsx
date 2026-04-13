@@ -1,5 +1,23 @@
 "use client"
 
+/**
+ * @fileoverview Radix UI Dialog 래퍼 컴포넌트 모음.
+ *
+ * 화면 중앙에 표시되는 모달 다이얼로그를 제공합니다.
+ * 오버레이가 배경을 흐리게 처리하고, 포커스를 다이얼로그 내부에 가둡니다.
+ *
+ * 구성 컴포넌트:
+ * - Dialog: 루트 (열림/닫힘 상태)
+ * - DialogTrigger: 다이얼로그를 여는 트리거
+ * - DialogContent: 실제 모달 패널 (showCloseButton prop)
+ * - DialogHeader: 제목·설명 영역
+ * - DialogFooter: 액션 버튼 영역 (showCloseButton으로 닫기 버튼 추가 가능)
+ * - DialogTitle: 다이얼로그 제목
+ * - DialogDescription: 다이얼로그 설명
+ * - DialogOverlay: 배경 오버레이
+ * - DialogClose: 다이얼로그를 닫는 요소
+ */
+
 import * as React from "react"
 import { Dialog as DialogPrimitive } from "radix-ui"
 
@@ -7,30 +25,55 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { XIcon } from "lucide-react"
 
+/**
+ * 다이얼로그 루트.
+ *
+ * @example
+ * ```tsx
+ * <Dialog>
+ *   <DialogTrigger asChild>
+ *     <Button>모달 열기</Button>
+ *   </DialogTrigger>
+ *   <DialogContent>
+ *     <DialogHeader>
+ *       <DialogTitle>제목</DialogTitle>
+ *       <DialogDescription>설명</DialogDescription>
+ *     </DialogHeader>
+ *     <DialogFooter>
+ *       <Button>확인</Button>
+ *     </DialogFooter>
+ *   </DialogContent>
+ * </Dialog>
+ * ```
+ */
 function Dialog({
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Root>) {
   return <DialogPrimitive.Root data-slot="dialog" {...props} />
 }
 
+/** 다이얼로그를 여는 트리거 요소 */
 function DialogTrigger({
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Trigger>) {
   return <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} />
 }
 
+/** 다이얼로그 Portal — DOM 트리 최상단에 렌더링하여 z-index 문제를 방지합니다. */
 function DialogPortal({
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Portal>) {
   return <DialogPrimitive.Portal data-slot="dialog-portal" {...props} />
 }
 
+/** 다이얼로그를 닫는 요소 — asChild로 커스텀 버튼에 닫기 기능을 부여할 수 있습니다. */
 function DialogClose({
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Close>) {
   return <DialogPrimitive.Close data-slot="dialog-close" {...props} />
 }
 
+/** 다이얼로그 배경 오버레이 — 클릭 시 다이얼로그가 닫힙니다. */
 function DialogOverlay({
   className,
   ...props
@@ -47,12 +90,20 @@ function DialogOverlay({
   )
 }
 
+/**
+ * 다이얼로그 메인 콘텐츠 패널.
+ *
+ * DialogOverlay 위에 화면 중앙에 표시됩니다.
+ *
+ * @param showCloseButton - 우측 상단 X 닫기 버튼 표시 여부 (기본값: true)
+ */
 function DialogContent({
   className,
   children,
   showCloseButton = true,
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Content> & {
+  /** 우측 상단 X 닫기 버튼 표시 여부 (기본값: true) */
   showCloseButton?: boolean
 }) {
   return (
@@ -85,6 +136,7 @@ function DialogContent({
   )
 }
 
+/** 다이얼로그 상단 헤더 — 제목과 설명을 수직 배치합니다. */
 function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -95,12 +147,18 @@ function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+/**
+ * 다이얼로그 하단 푸터 — 액션 버튼 영역.
+ *
+ * @param showCloseButton - "Close" 텍스트 닫기 버튼 포함 여부 (기본값: false)
+ */
 function DialogFooter({
   className,
   showCloseButton = false,
   children,
   ...props
 }: React.ComponentProps<"div"> & {
+  /** "Close" 텍스트 버튼을 하단에 자동 추가할지 여부 (기본값: false) */
   showCloseButton?: boolean
 }) {
   return (
@@ -122,6 +180,7 @@ function DialogFooter({
   )
 }
 
+/** 다이얼로그 제목 — 스크린 리더에 다이얼로그 이름으로 전달됩니다. */
 function DialogTitle({
   className,
   ...props
@@ -138,6 +197,7 @@ function DialogTitle({
   )
 }
 
+/** 다이얼로그 설명 — 스크린 리더에 다이얼로그 설명으로 전달됩니다. */
 function DialogDescription({
   className,
   ...props

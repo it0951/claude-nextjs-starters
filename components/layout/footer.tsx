@@ -1,6 +1,14 @@
+/**
+ * @fileoverview 사이트 하단 푸터 컴포넌트.
+ *
+ * 프로젝트에서 사용하는 기술 스택 배지와 저작권 정보를 표시합니다.
+ * Server Component로 동작합니다.
+ */
+
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 
+/** 기술 스택 목록 — 배지 레이블과 공식 문서 링크로 구성 */
 const techStack = [
   { label: "Next.js 16", href: "https://nextjs.org" },
   { label: "React 19", href: "https://react.dev" },
@@ -9,7 +17,20 @@ const techStack = [
   { label: "ShadcnUI", href: "https://ui.shadcn.com" },
 ];
 
+/**
+ * 사이트 하단 푸터.
+ *
+ * 기술 스택 배지와 저작권 연도를 표시합니다.
+ * 연도는 빌드 시점이 아닌 렌더링 시점의 현재 연도를 사용합니다.
+ *
+ * @example
+ * ```tsx
+ * // app/layout.tsx 에서 사용
+ * <Footer />
+ * ```
+ */
 export function Footer() {
+  // 빌드 캐시 없이 렌더링 시마다 현재 연도를 반환
   const currentYear = new Date().getFullYear();
 
   return (

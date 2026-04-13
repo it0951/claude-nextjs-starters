@@ -1,5 +1,12 @@
 "use client"
 
+/**
+ * @fileoverview 상단 고정 네비게이션 바 컴포넌트.
+ *
+ * 다크/라이트 모드 토글과 모바일 Sheet 메뉴를 포함합니다.
+ * md 브레이크포인트 미만에서는 햄버거 메뉴로 전환됩니다.
+ */
+
 import { useState } from "react"
 import Link from "next/link"
 import { useTheme } from "next-themes"
@@ -14,6 +21,7 @@ import {
 } from "@/components/ui/sheet"
 import { Separator } from "@/components/ui/separator"
 
+/** 네비게이션 링크 목록 — href와 표시 레이블로 구성 */
 const navLinks = [
   { href: "/", label: "홈" },
   { href: "#components", label: "컴포넌트" },
@@ -21,6 +29,18 @@ const navLinks = [
   { href: "#feedback", label: "피드백" },
 ]
 
+/**
+ * 사이트 상단 고정 네비게이션 바.
+ *
+ * 로고, 데스크탑 메뉴, 다크모드 토글, 모바일 햄버거 메뉴를 렌더링합니다.
+ * `sticky top-0`으로 스크롤 시에도 상단에 고정됩니다.
+ *
+ * @example
+ * ```tsx
+ * // app/layout.tsx 에서 사용
+ * <Navbar />
+ * ```
+ */
 export function Navbar() {
   // resolvedTheme: "system" 설정 시 실제 적용된 테마(light/dark)를 반환
   const { resolvedTheme, setTheme } = useTheme()

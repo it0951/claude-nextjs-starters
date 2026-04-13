@@ -1,11 +1,37 @@
 "use client"
 
+/**
+ * @fileoverview Radix UI Accordion 래퍼 컴포넌트 모음.
+ *
+ * 항목을 클릭하여 콘텐츠를 접고 펼치는 아코디언 UI를 제공합니다.
+ * type="single" (단일 항목 오픈) 또는 type="multiple" (다중 항목 오픈)을 지원합니다.
+ *
+ * 구성 컴포넌트:
+ * - Accordion: 루트 컨테이너
+ * - AccordionItem: 개별 아코디언 항목
+ * - AccordionTrigger: 클릭 시 콘텐츠를 여닫는 헤더 버튼
+ * - AccordionContent: 펼쳐지는 콘텐츠 영역 (CSS 애니메이션 포함)
+ */
+
 import * as React from "react"
 import { Accordion as AccordionPrimitive } from "radix-ui"
 
 import { cn } from "@/lib/utils"
 import { ChevronDownIcon, ChevronUpIcon } from "lucide-react"
 
+/**
+ * 아코디언 루트 컨테이너.
+ *
+ * @example
+ * ```tsx
+ * <Accordion type="single" collapsible>
+ *   <AccordionItem value="item-1">
+ *     <AccordionTrigger>질문 1</AccordionTrigger>
+ *     <AccordionContent>답변 내용</AccordionContent>
+ *   </AccordionItem>
+ * </Accordion>
+ * ```
+ */
 function Accordion({
   className,
   ...props
@@ -19,6 +45,12 @@ function Accordion({
   )
 }
 
+/**
+ * 개별 아코디언 항목.
+ *
+ * `value` prop으로 고유 식별자를 지정합니다.
+ * 마지막 항목을 제외한 각 항목 하단에 구분선이 표시됩니다.
+ */
 function AccordionItem({
   className,
   ...props
@@ -32,6 +64,12 @@ function AccordionItem({
   )
 }
 
+/**
+ * 아코디언 헤더 트리거 버튼.
+ *
+ * 열림 상태에서는 ChevronUp, 닫힘 상태에서는 ChevronDown 아이콘을 표시합니다.
+ * aria-expanded 속성을 통해 스크린 리더에 상태가 전달됩니다.
+ */
 function AccordionTrigger({
   className,
   children,
@@ -55,6 +93,12 @@ function AccordionTrigger({
   )
 }
 
+/**
+ * 아코디언 펼쳐지는 콘텐츠 영역.
+ *
+ * `data-open:animate-accordion-down`, `data-closed:animate-accordion-up`으로
+ * CSS 애니메이션이 적용됩니다. 내부 링크와 단락 사이의 간격이 자동으로 처리됩니다.
+ */
 function AccordionContent({
   className,
   children,

@@ -1,5 +1,20 @@
 "use client"
 
+/**
+ * @fileoverview 복합 입력 필드 구성 컴포넌트 모음.
+ *
+ * InputGroup을 루트로 하여 아이콘, 텍스트, 버튼 등을 입력 필드 앞뒤에 결합합니다.
+ * inline(좌우) 및 block(상하) 배치를 모두 지원합니다.
+ *
+ * 구성 컴포넌트:
+ * - InputGroup: 컨테이너 (포커스 링, 에러 스타일 통합 관리)
+ * - InputGroupAddon: 아이콘/텍스트/버튼을 담는 보조 영역
+ * - InputGroupButton: InputGroupAddon 내부 버튼
+ * - InputGroupText: InputGroupAddon 내부 텍스트/아이콘 표시 요소
+ * - InputGroupInput: 그룹 내 input 필드
+ * - InputGroupTextarea: 그룹 내 textarea 필드
+ */
+
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 
@@ -8,6 +23,22 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 
+/**
+ * 복합 입력 필드 컨테이너.
+ *
+ * 내부 input/textarea의 포커스 상태와 에러 상태를 통합하여
+ * 그룹 전체에 포커스 링과 에러 스타일을 적용합니다.
+ *
+ * @example
+ * ```tsx
+ * <InputGroup>
+ *   <InputGroupAddon align="inline-start">
+ *     <SearchIcon />
+ *   </InputGroupAddon>
+ *   <InputGroupInput placeholder="검색어 입력" />
+ * </InputGroup>
+ * ```
+ */
 function InputGroup({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -22,6 +53,12 @@ function InputGroup({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+/**
+ * Addon 배치 위치 variant 정의.
+ *
+ * - inline-start/end: 입력 필드 좌우에 배치
+ * - block-start/end: 입력 필드 상하에 배치 (InputGroup이 flex-col로 전환됨)
+ */
 const inputGroupAddonVariants = cva(
   "flex h-auto cursor-text items-center justify-center gap-2 py-1.5 text-sm font-medium text-muted-foreground select-none group-data-[disabled=true]/input-group:opacity-50 [&>kbd]:rounded-[calc(var(--radius)-5px)] [&>svg:not([class*='size-'])]:size-4",
   {
@@ -43,6 +80,22 @@ const inputGroupAddonVariants = cva(
   }
 )
 
+/**
+ * 입력 필드 앞뒤에 아이콘·텍스트·버튼을 배치하는 보조 영역.
+ *
+ * @param align - 배치 위치 (inline-start | inline-end | block-start | block-end, 기본값: "inline-start")
+ *
+ * @example
+ * ```tsx
+ * // 좌측 아이콘
+ * <InputGroupAddon align="inline-start">
+ *   <SearchIcon />
+ * </InputGroupAddon>
+ *
+ * // 상단 레이블
+ * <InputGroupAddon align="block-start">금액 (원)</InputGroupAddon>
+ * ```
+ */
 function InputGroupAddon({
   className,
   align = "inline-start",
@@ -55,6 +108,8 @@ function InputGroupAddon({
       data-align={align}
       className={cn(inputGroupAddonVariants({ align }), className)}
       onClick={(e) => {
+        // Addon 영역 클릭 시 내부 button이 아닌 경우에만 input으로 포커스 이동
+        // button 클릭은 자체 이벤트로 처리되어야 하므로 early return
         if ((e.target as HTMLElement).closest("button")) {
           return
         }
@@ -65,6 +120,10 @@ function InputGroupAddon({
   )
 }
 
+/**
+ * InputGroupAddon 내부 버튼 크기 variant 정의.
+ * InputGroup의 높이에 맞도록 작은 크기를 기본값으로 사용합니다.
+ */
 const inputGroupButtonVariants = cva(
   "flex items-center gap-2 text-sm shadow-none",
   {
@@ -83,6 +142,21 @@ const inputGroupButtonVariants = cva(
   }
 )
 
+/**
+ * InputGroupAddon 내부에서 사용하는 버튼 컴포넌트.
+ *
+ * InputGroup의 높이와 어울리도록 작은 기본 크기를 사용합니다.
+ * type 기본값이 "button"이므로 폼 제출을 의도치 않게 트리거하지 않습니다.
+ *
+ * @example
+ * ```tsx
+ * <InputGroupAddon align="inline-end">
+ *   <InputGroupButton onClick={handleClear}>
+ *     <XIcon />
+ *   </InputGroupButton>
+ * </InputGroupAddon>
+ * ```
+ */
 function InputGroupButton({
   className,
   type = "button",
@@ -102,6 +176,18 @@ function InputGroupButton({
   )
 }
 
+/**
+ * InputGroupAddon 내부에서 텍스트나 아이콘을 표시하는 인라인 요소.
+ *
+ * @example
+ * ```tsx
+ * <InputGroupAddon>
+ *   <InputGroupText>
+ *     <AtSignIcon />
+ *   </InputGroupText>
+ * </InputGroupAddon>
+ * ```
+ */
 function InputGroupText({ className, ...props }: React.ComponentProps<"span">) {
   return (
     <span
@@ -114,6 +200,12 @@ function InputGroupText({ className, ...props }: React.ComponentProps<"span">) {
   )
 }
 
+/**
+ * InputGroup 내부에서 사용하는 input 필드.
+ *
+ * 그룹 컨테이너의 테두리를 활용하므로 자체 테두리와 배경을 제거합니다.
+ * `data-slot="input-group-control"`로 포커스 스타일을 상위 InputGroup에 위임합니다.
+ */
 function InputGroupInput({
   className,
   ...props
@@ -130,6 +222,12 @@ function InputGroupInput({
   )
 }
 
+/**
+ * InputGroup 내부에서 사용하는 textarea 필드.
+ *
+ * resize를 비활성화하여 InputGroup 레이아웃을 유지합니다.
+ * `data-slot="input-group-control"`로 포커스 스타일을 상위 InputGroup에 위임합니다.
+ */
 function InputGroupTextarea({
   className,
   ...props

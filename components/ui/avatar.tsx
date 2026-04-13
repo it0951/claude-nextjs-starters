@@ -1,15 +1,45 @@
 "use client"
 
+/**
+ * @fileoverview Radix UI 기반 아바타 컴포넌트 모음.
+ *
+ * Avatar를 루트로 하여 이미지, 폴백, 뱃지, 그룹 표시를 지원합니다.
+ *
+ * 구성 컴포넌트:
+ * - Avatar: 루트 컨테이너 (크기: sm/default/lg)
+ * - AvatarImage: 실제 프로필 이미지
+ * - AvatarFallback: 이미지 로드 실패 시 표시할 텍스트/아이콘
+ * - AvatarBadge: 아바타 우하단 상태 표시 뱃지
+ * - AvatarGroup: 여러 아바타를 겹쳐 표시하는 그룹 컨테이너
+ * - AvatarGroupCount: 그룹에서 초과 인원 수를 표시하는 요소
+ */
+
 import * as React from "react"
 import { Avatar as AvatarPrimitive } from "radix-ui"
 
 import { cn } from "@/lib/utils"
 
+/**
+ * 아바타 루트 컨테이너.
+ *
+ * 원형 마스크와 테두리를 제공하며 내부 AvatarImage/AvatarFallback을 감쌉니다.
+ *
+ * @param size - 아바타 크기 (sm: 24px, default: 32px, lg: 40px)
+ *
+ * @example
+ * ```tsx
+ * <Avatar size="lg">
+ *   <AvatarImage src="/profile.jpg" alt="홍길동" />
+ *   <AvatarFallback>홍</AvatarFallback>
+ * </Avatar>
+ * ```
+ */
 function Avatar({
   className,
   size = "default",
   ...props
 }: React.ComponentProps<typeof AvatarPrimitive.Root> & {
+  /** 아바타 크기 (sm: 24px | default: 32px | lg: 40px) */
   size?: "default" | "sm" | "lg"
 }) {
   return (
@@ -25,6 +55,14 @@ function Avatar({
   )
 }
 
+/**
+ * 아바타 이미지.
+ *
+ * 이미지 로드에 실패하거나 src가 없을 때 자동으로 AvatarFallback을 표시합니다.
+ *
+ * @param src - 이미지 URL
+ * @param alt - 접근성을 위한 대체 텍스트 (필수)
+ */
 function AvatarImage({
   className,
   ...props
@@ -41,6 +79,12 @@ function AvatarImage({
   )
 }
 
+/**
+ * 이미지 로드 실패 시 표시되는 폴백 요소.
+ *
+ * 사용자 이름의 첫 글자나 아이콘을 표시합니다.
+ * Radix가 이미지 로드 성공 여부를 감지하여 표시 여부를 자동 제어합니다.
+ */
 function AvatarFallback({
   className,
   ...props
@@ -57,6 +101,12 @@ function AvatarFallback({
   )
 }
 
+/**
+ * 아바타 우하단에 표시되는 상태 뱃지.
+ *
+ * 온라인/오프라인 상태, 알림 카운트 등을 표시하는 데 사용합니다.
+ * Avatar의 size prop에 따라 뱃지 크기도 자동으로 조정됩니다.
+ */
 function AvatarBadge({ className, ...props }: React.ComponentProps<"span">) {
   return (
     <span
@@ -73,6 +123,20 @@ function AvatarBadge({ className, ...props }: React.ComponentProps<"span">) {
   )
 }
 
+/**
+ * 여러 아바타를 일부 겹쳐서 표시하는 그룹 컨테이너.
+ *
+ * 내부 Avatar에 자동으로 ring 테두리를 추가하여 겹침 효과를 만듭니다.
+ *
+ * @example
+ * ```tsx
+ * <AvatarGroup>
+ *   <Avatar><AvatarImage src="/user1.jpg" alt="사용자1" /></Avatar>
+ *   <Avatar><AvatarImage src="/user2.jpg" alt="사용자2" /></Avatar>
+ *   <AvatarGroupCount>+3</AvatarGroupCount>
+ * </AvatarGroup>
+ * ```
+ */
 function AvatarGroup({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -86,6 +150,16 @@ function AvatarGroup({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+/**
+ * AvatarGroup에서 표시되지 않은 초과 인원 수를 나타내는 요소.
+ *
+ * AvatarGroup 내 Avatar의 size에 따라 크기가 자동으로 맞춰집니다.
+ *
+ * @example
+ * ```tsx
+ * <AvatarGroupCount>+5</AvatarGroupCount>
+ * ```
+ */
 function AvatarGroupCount({
   className,
   ...props

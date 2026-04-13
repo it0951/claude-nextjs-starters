@@ -1,17 +1,52 @@
 "use client"
 
+/**
+ * @fileoverview Radix UI Select 래퍼 컴포넌트 모음.
+ *
+ * 네이티브 select 대신 커스텀 스타일의 드롭다운 선택 UI를 제공합니다.
+ * 키보드 탐색과 접근성이 기본 지원됩니다.
+ *
+ * 구성 컴포넌트:
+ * - Select: 루트 (value/onValueChange로 제어 가능)
+ * - SelectTrigger: 선택된 값을 표시하는 버튼
+ * - SelectValue: 선택된 값 또는 placeholder 표시
+ * - SelectContent: 옵션 목록 드롭다운 패널
+ * - SelectGroup: 옵션 그룹 컨테이너
+ * - SelectLabel: 그룹 레이블
+ * - SelectItem: 개별 선택 옵션
+ * - SelectSeparator: 그룹 구분선
+ * - SelectScrollUpButton/SelectScrollDownButton: 스크롤 컨트롤
+ */
+
 import * as React from "react"
 import { Select as SelectPrimitive } from "radix-ui"
 
 import { cn } from "@/lib/utils"
 import { ChevronDownIcon, CheckIcon, ChevronUpIcon } from "lucide-react"
 
+/**
+ * Select 루트.
+ *
+ * @example
+ * ```tsx
+ * <Select value={value} onValueChange={setValue}>
+ *   <SelectTrigger>
+ *     <SelectValue placeholder="선택하세요" />
+ *   </SelectTrigger>
+ *   <SelectContent>
+ *     <SelectItem value="option1">옵션 1</SelectItem>
+ *     <SelectItem value="option2">옵션 2</SelectItem>
+ *   </SelectContent>
+ * </Select>
+ * ```
+ */
 function Select({
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Root>) {
   return <SelectPrimitive.Root data-slot="select" {...props} />
 }
 
+/** 관련 옵션을 묶는 그룹 컨테이너 */
 function SelectGroup({
   className,
   ...props
@@ -25,18 +60,25 @@ function SelectGroup({
   )
 }
 
+/** 현재 선택된 값 또는 placeholder를 표시하는 요소 */
 function SelectValue({
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Value>) {
   return <SelectPrimitive.Value data-slot="select-value" {...props} />
 }
 
+/**
+ * 선택된 값을 표시하고 드롭다운을 여닫는 버튼.
+ *
+ * @param size - 트리거 버튼 크기 (default: 32px | sm: 28px)
+ */
 function SelectTrigger({
   className,
   size = "default",
   children,
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Trigger> & {
+  /** 트리거 높이 크기 (default: 32px | sm: 28px) */
   size?: "sm" | "default"
 }) {
   return (
@@ -57,6 +99,12 @@ function SelectTrigger({
   )
 }
 
+/**
+ * 옵션 목록 드롭다운 패널.
+ *
+ * @param position - 배치 방식 (item-aligned: 선택 항목 기준 | popper: 트리거 기준)
+ * @param align - 트리거 기준 정렬 방향 (기본값: "center")
+ */
 function SelectContent({
   className,
   children,
@@ -90,6 +138,7 @@ function SelectContent({
   )
 }
 
+/** SelectGroup 레이블 — 클릭/선택 불가능한 구분 텍스트 */
 function SelectLabel({
   className,
   ...props
@@ -103,6 +152,11 @@ function SelectLabel({
   )
 }
 
+/**
+ * 개별 선택 옵션 항목.
+ *
+ * 선택된 항목에는 우측에 체크 아이콘이 자동으로 표시됩니다.
+ */
 function SelectItem({
   className,
   children,
@@ -127,6 +181,7 @@ function SelectItem({
   )
 }
 
+/** SelectGroup 또는 SelectItem 사이의 구분선 */
 function SelectSeparator({
   className,
   ...props
@@ -140,6 +195,7 @@ function SelectSeparator({
   )
 }
 
+/** 옵션 목록 상단 스크롤 컨트롤 버튼 — 목록이 넘칠 때 자동으로 표시됩니다. */
 function SelectScrollUpButton({
   className,
   ...props
@@ -159,6 +215,7 @@ function SelectScrollUpButton({
   )
 }
 
+/** 옵션 목록 하단 스크롤 컨트롤 버튼 — 목록이 넘칠 때 자동으로 표시됩니다. */
 function SelectScrollDownButton({
   className,
   ...props

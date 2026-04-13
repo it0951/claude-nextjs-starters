@@ -1,17 +1,55 @@
 "use client"
 
+/**
+ * @fileoverview Radix UI DropdownMenu 래퍼 컴포넌트 모음.
+ *
+ * 트리거 요소에 연결된 드롭다운 메뉴를 제공합니다.
+ * 일반 항목, 체크박스 항목, 라디오 항목, 중첩 서브메뉴를 지원합니다.
+ *
+ * 구성 컴포넌트:
+ * - DropdownMenu: 루트
+ * - DropdownMenuTrigger: 메뉴를 여닫는 트리거
+ * - DropdownMenuContent: 메뉴 패널 컨테이너
+ * - DropdownMenuGroup: 항목 그룹
+ * - DropdownMenuItem: 기본 메뉴 항목 (variant: default | destructive)
+ * - DropdownMenuCheckboxItem: 체크박스 형태의 토글 항목
+ * - DropdownMenuRadioGroup/DropdownMenuRadioItem: 단일 선택 라디오 항목
+ * - DropdownMenuLabel: 그룹 레이블
+ * - DropdownMenuSeparator: 항목 구분선
+ * - DropdownMenuShortcut: 키보드 단축키 표시
+ * - DropdownMenuSub/DropdownMenuSubTrigger/DropdownMenuSubContent: 중첩 서브메뉴
+ */
+
 import * as React from "react"
 import { DropdownMenu as DropdownMenuPrimitive } from "radix-ui"
 
 import { cn } from "@/lib/utils"
 import { CheckIcon, ChevronRightIcon } from "lucide-react"
 
+/**
+ * 드롭다운 메뉴 루트.
+ *
+ * @example
+ * ```tsx
+ * <DropdownMenu>
+ *   <DropdownMenuTrigger asChild>
+ *     <Button variant="outline">메뉴</Button>
+ *   </DropdownMenuTrigger>
+ *   <DropdownMenuContent>
+ *     <DropdownMenuItem>프로필</DropdownMenuItem>
+ *     <DropdownMenuSeparator />
+ *     <DropdownMenuItem variant="destructive">로그아웃</DropdownMenuItem>
+ *   </DropdownMenuContent>
+ * </DropdownMenu>
+ * ```
+ */
 function DropdownMenu({
   ...props
 }: React.ComponentProps<typeof DropdownMenuPrimitive.Root>) {
   return <DropdownMenuPrimitive.Root data-slot="dropdown-menu" {...props} />
 }
 
+/** 드롭다운 메뉴 Portal — DOM 트리 최상단에 렌더링하여 z-index 문제를 방지합니다. */
 function DropdownMenuPortal({
   ...props
 }: React.ComponentProps<typeof DropdownMenuPrimitive.Portal>) {
@@ -20,6 +58,7 @@ function DropdownMenuPortal({
   )
 }
 
+/** 드롭다운 메뉴를 여닫는 트리거 요소 */
 function DropdownMenuTrigger({
   ...props
 }: React.ComponentProps<typeof DropdownMenuPrimitive.Trigger>) {
@@ -31,6 +70,12 @@ function DropdownMenuTrigger({
   )
 }
 
+/**
+ * 드롭다운 메뉴 패널 컨테이너.
+ *
+ * @param align - 트리거 기준 정렬 (start | center | end, 기본값: "start")
+ * @param sideOffset - 트리거와의 간격 (픽셀, 기본값: 4)
+ */
 function DropdownMenuContent({
   className,
   align = "start",
@@ -50,6 +95,7 @@ function DropdownMenuContent({
   )
 }
 
+/** 관련 메뉴 항목을 논리적으로 묶는 그룹 컨테이너 */
 function DropdownMenuGroup({
   ...props
 }: React.ComponentProps<typeof DropdownMenuPrimitive.Group>) {
@@ -58,13 +104,21 @@ function DropdownMenuGroup({
   )
 }
 
+/**
+ * 기본 드롭다운 메뉴 항목.
+ *
+ * @param inset - true이면 좌측 패딩을 추가하여 아이콘 없는 항목을 정렬
+ * @param variant - 스타일 변형 (default | destructive)
+ */
 function DropdownMenuItem({
   className,
   inset,
   variant = "default",
   ...props
 }: React.ComponentProps<typeof DropdownMenuPrimitive.Item> & {
+  /** 좌측 패딩 추가 여부 — 아이콘이 없는 항목을 아이콘 있는 항목과 수평 정렬 */
   inset?: boolean
+  /** 스타일 변형 (default: 일반 | destructive: 위험 액션) */
   variant?: "default" | "destructive"
 }) {
   return (
@@ -81,6 +135,11 @@ function DropdownMenuItem({
   )
 }
 
+/**
+ * 체크박스 형태의 토글 메뉴 항목.
+ *
+ * 선택 시 우측에 체크 아이콘이 표시됩니다.
+ */
 function DropdownMenuCheckboxItem({
   className,
   children,
@@ -115,6 +174,7 @@ function DropdownMenuCheckboxItem({
   )
 }
 
+/** 단일 선택 라디오 항목 그룹 */
 function DropdownMenuRadioGroup({
   ...props
 }: React.ComponentProps<typeof DropdownMenuPrimitive.RadioGroup>) {
@@ -126,6 +186,7 @@ function DropdownMenuRadioGroup({
   )
 }
 
+/** 라디오 선택 항목 — 선택 시 우측에 체크 아이콘이 표시됩니다. */
 function DropdownMenuRadioItem({
   className,
   children,
@@ -158,6 +219,7 @@ function DropdownMenuRadioItem({
   )
 }
 
+/** 메뉴 항목 그룹의 레이블 — 클릭/선택 불가능한 구분 텍스트 */
 function DropdownMenuLabel({
   className,
   inset,
@@ -178,6 +240,7 @@ function DropdownMenuLabel({
   )
 }
 
+/** 메뉴 항목 사이 구분선 */
 function DropdownMenuSeparator({
   className,
   ...props
@@ -191,6 +254,7 @@ function DropdownMenuSeparator({
   )
 }
 
+/** 메뉴 항목 우측에 표시되는 키보드 단축키 힌트 텍스트 */
 function DropdownMenuShortcut({
   className,
   ...props
@@ -207,12 +271,18 @@ function DropdownMenuShortcut({
   )
 }
 
+/** 중첩 서브메뉴 루트 */
 function DropdownMenuSub({
   ...props
 }: React.ComponentProps<typeof DropdownMenuPrimitive.Sub>) {
   return <DropdownMenuPrimitive.Sub data-slot="dropdown-menu-sub" {...props} />
 }
 
+/**
+ * 서브메뉴를 여닫는 트리거 항목.
+ *
+ * 우측에 ChevronRight 아이콘이 자동으로 표시됩니다.
+ */
 function DropdownMenuSubTrigger({
   className,
   inset,
@@ -237,6 +307,7 @@ function DropdownMenuSubTrigger({
   )
 }
 
+/** 서브메뉴 콘텐츠 패널 — SubTrigger 옆에 중첩 메뉴를 표시합니다. */
 function DropdownMenuSubContent({
   className,
   ...props

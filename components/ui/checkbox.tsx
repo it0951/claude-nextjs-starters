@@ -1,11 +1,40 @@
 "use client"
 
+/**
+ * @fileoverview Radix UI Checkbox 래퍼 컴포넌트.
+ *
+ * 체크/미체크 상태를 토글하는 체크박스입니다.
+ * react-hook-form과 함께 사용 시 `aria-invalid` 속성으로 에러 스타일이 자동 적용됩니다.
+ */
+
 import * as React from "react"
 import { Checkbox as CheckboxPrimitive } from "radix-ui"
 
 import { cn } from "@/lib/utils"
 import { CheckIcon } from "lucide-react"
 
+/**
+ * 체크박스 컴포넌트.
+ *
+ * `data-checked` 상태에서 primary 색상으로 배경이 채워집니다.
+ * `-inset-x-3 -inset-y-2` 가상 요소로 클릭 영역이 시각적 크기보다 넓게 확장됩니다.
+ *
+ * @example
+ * ```tsx
+ * <Checkbox id="terms" />
+ * <Label htmlFor="terms">이용약관에 동의합니다</Label>
+ *
+ * // react-hook-form과 함께 사용
+ * // Radix onCheckedChange는 boolean | "indeterminate"를 반환하므로
+ * // "indeterminate" 케이스를 명시적으로 처리해야 합니다
+ * <Checkbox
+ *   checked={field.value}
+ *   onCheckedChange={(checked) => {
+ *     if (checked !== "indeterminate") field.onChange(checked)
+ *   }}
+ * />
+ * ```
+ */
 function Checkbox({
   className,
   ...props

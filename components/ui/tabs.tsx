@@ -1,11 +1,40 @@
 "use client"
 
+/**
+ * @fileoverview Radix UI Tabs 래퍼 컴포넌트 모음.
+ *
+ * 수평/수직 방향과 default/line 두 가지 스타일 variant를 지원합니다.
+ *
+ * 구성 컴포넌트:
+ * - Tabs: 루트 (orientation 설정)
+ * - TabsList: 탭 버튼 목록 컨테이너 (variant: default | line)
+ * - TabsTrigger: 개별 탭 버튼
+ * - TabsContent: 선택된 탭의 콘텐츠 패널
+ */
+
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { Tabs as TabsPrimitive } from "radix-ui"
 
 import { cn } from "@/lib/utils"
 
+/**
+ * 탭 루트 컨테이너.
+ *
+ * @param orientation - 탭 방향 (horizontal | vertical, 기본값: "horizontal")
+ *
+ * @example
+ * ```tsx
+ * <Tabs defaultValue="tab1">
+ *   <TabsList>
+ *     <TabsTrigger value="tab1">첫 번째</TabsTrigger>
+ *     <TabsTrigger value="tab2">두 번째</TabsTrigger>
+ *   </TabsList>
+ *   <TabsContent value="tab1">첫 번째 내용</TabsContent>
+ *   <TabsContent value="tab2">두 번째 내용</TabsContent>
+ * </Tabs>
+ * ```
+ */
 function Tabs({
   className,
   orientation = "horizontal",
@@ -24,6 +53,12 @@ function Tabs({
   )
 }
 
+/**
+ * TabsList 스타일 variant 정의.
+ *
+ * - default: muted 배경의 채워진 스타일
+ * - line: 배경 없이 활성 탭에 하단(수평) 또는 우측(수직) 라인 표시
+ */
 const tabsListVariants = cva(
   "group/tabs-list inline-flex w-fit items-center justify-center rounded-lg p-[3px] text-muted-foreground group-data-horizontal/tabs:h-8 group-data-vertical/tabs:h-fit group-data-vertical/tabs:flex-col data-[variant=line]:rounded-none",
   {
@@ -39,6 +74,11 @@ const tabsListVariants = cva(
   }
 )
 
+/**
+ * 탭 버튼 목록 컨테이너.
+ *
+ * @param variant - 스타일 변형 (default: 채워진 스타일 | line: 라인 스타일)
+ */
 function TabsList({
   className,
   variant = "default",
@@ -55,6 +95,12 @@ function TabsList({
   )
 }
 
+/**
+ * 개별 탭 트리거 버튼.
+ *
+ * line variant일 때 활성 상태에서 수평/수직 방향에 따라 라인이 표시됩니다.
+ * `after:` 가상 요소로 라인을 구현하여 레이아웃 이동 없이 전환됩니다.
+ */
 function TabsTrigger({
   className,
   ...props
@@ -74,6 +120,7 @@ function TabsTrigger({
   )
 }
 
+/** 선택된 탭에 해당하는 콘텐츠 패널 */
 function TabsContent({
   className,
   ...props

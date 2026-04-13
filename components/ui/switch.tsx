@@ -1,15 +1,34 @@
 "use client"
 
+/**
+ * @fileoverview Radix UI Switch 래퍼 컴포넌트.
+ *
+ * 온/오프 상태를 토글하는 스위치입니다. sm/default 두 가지 크기를 지원합니다.
+ * Thumb의 translate 거리를 CSS calc로 계산하여 정확한 가장자리 정렬을 구현합니다.
+ */
+
 import * as React from "react"
 import { Switch as SwitchPrimitive } from "radix-ui"
 
 import { cn } from "@/lib/utils"
 
+/**
+ * 토글 스위치 컴포넌트.
+ *
+ * @param size - 스위치 크기 (sm: 14×24px | default: 18.4×32px)
+ *
+ * @example
+ * ```tsx
+ * <Switch checked={enabled} onCheckedChange={setEnabled} />
+ * <Switch size="sm" />
+ * ```
+ */
 function Switch({
   className,
   size = "default",
   ...props
 }: React.ComponentProps<typeof SwitchPrimitive.Root> & {
+  /** 스위치 크기 (sm: 소형 | default: 기본) */
   size?: "sm" | "default"
 }) {
   return (
