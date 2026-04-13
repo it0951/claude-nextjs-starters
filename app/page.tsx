@@ -1,75 +1,129 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { useState } from "react"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
-import { toast } from "sonner"
+import Link from "next/link";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { toast } from "sonner";
 import {
-  Bell, CheckCircle2, AlertCircle, Info, User,
-  Settings, LogOut, Zap, Code2, Layers, Package,
-  Palette, ChevronDown, MoreHorizontal,
-} from "lucide-react"
+  Bell,
+  CheckCircle2,
+  AlertCircle,
+  Info,
+  User,
+  Settings,
+  LogOut,
+  Zap,
+  Code2,
+  Layers,
+  Package,
+  Palette,
+  ChevronDown,
+  MoreHorizontal,
+} from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
-import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
 import {
-  Avatar, AvatarFallback, AvatarImage,
-  AvatarGroup, AvatarGroupCount,
-} from "@/components/ui/avatar"
-import { Separator } from "@/components/ui/separator"
-import { Skeleton } from "@/components/ui/skeleton"
-import { Progress } from "@/components/ui/progress"
-import { Switch } from "@/components/ui/switch"
-import { Checkbox } from "@/components/ui/checkbox"
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+  AvatarGroup,
+  AvatarGroupCount,
+} from "@/components/ui/avatar";
+import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Progress } from "@/components/ui/progress";
+import { Switch } from "@/components/ui/switch";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
-  Card, CardHeader, CardTitle, CardDescription,
-  CardContent, CardFooter, CardAction,
-} from "@/components/ui/card"
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+  CardAction,
+} from "@/components/ui/card";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  Accordion, AccordionContent,
-  AccordionItem, AccordionTrigger,
-} from "@/components/ui/accordion"
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import {
-  Dialog, DialogContent, DialogDescription,
-  DialogFooter, DialogHeader, DialogTitle, DialogTrigger,
-} from "@/components/ui/dialog"
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import {
-  Sheet, SheetContent, SheetDescription,
-  SheetHeader, SheetTitle, SheetTrigger,
-} from "@/components/ui/sheet"
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import {
-  DropdownMenu, DropdownMenuContent, DropdownMenuItem,
-  DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
-  Select, SelectContent, SelectItem,
-  SelectTrigger, SelectValue,
-} from "@/components/ui/select"
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
-  Tooltip, TooltipContent, TooltipTrigger,
-} from "@/components/ui/tooltip"
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import {
-  Table, TableBody, TableCaption, TableCell,
-  TableHead, TableHeader, TableRow,
-} from "@/components/ui/table"
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import {
-  Breadcrumb, BreadcrumbItem, BreadcrumbLink,
-  BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import {
-  Command, CommandEmpty, CommandGroup,
-  CommandInput, CommandItem, CommandList,
-} from "@/components/ui/command"
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 import {
-  Popover, PopoverContent, PopoverTrigger,
-} from "@/components/ui/popover"
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 // 폼 스키마 (zod)
 const signupSchema = z.object({
@@ -80,17 +134,41 @@ const signupSchema = z.object({
     error: "역할을 선택해주세요",
   }),
   terms: z.boolean().refine((v) => v === true, "이용약관에 동의해주세요"),
-})
+});
 
-type SignupFormValues = z.infer<typeof signupSchema>
+type SignupFormValues = z.infer<typeof signupSchema>;
 
 // 샘플 테이블 데이터
 const tableData = [
-  { id: 1, name: "김철수", email: "kim@example.com", role: "개발자", status: "활성" },
-  { id: 2, name: "이영희", email: "lee@example.com", role: "디자이너", status: "활성" },
-  { id: 3, name: "박민준", email: "park@example.com", role: "매니저", status: "비활성" },
-  { id: 4, name: "최수연", email: "choi@example.com", role: "개발자", status: "활성" },
-]
+  {
+    id: 1,
+    name: "김철수",
+    email: "kim@example.com",
+    role: "개발자",
+    status: "활성",
+  },
+  {
+    id: 2,
+    name: "이영희",
+    email: "lee@example.com",
+    role: "디자이너",
+    status: "활성",
+  },
+  {
+    id: 3,
+    name: "박민준",
+    email: "park@example.com",
+    role: "매니저",
+    status: "비활성",
+  },
+  {
+    id: 4,
+    name: "최수연",
+    email: "choi@example.com",
+    role: "개발자",
+    status: "활성",
+  },
+];
 
 // 섹션 래퍼 컴포넌트
 function Section({
@@ -99,10 +177,10 @@ function Section({
   description,
   children,
 }: {
-  id?: string
-  title: string
-  description?: string
-  children: React.ReactNode
+  id?: string;
+  title: string;
+  description?: string;
+  children: React.ReactNode;
 }) {
   return (
     <section id={id} className="scroll-mt-20">
@@ -114,13 +192,13 @@ function Section({
       </div>
       {children}
     </section>
-  )
+  );
 }
 
 export default function Home() {
-  const [progress, setProgress] = useState(60)
-  const [switchOn, setSwitchOn] = useState(false)
-  const [checked, setChecked] = useState(false)
+  const [progress, setProgress] = useState(60);
+  const [switchOn, setSwitchOn] = useState(false);
+  const [checked, setChecked] = useState(false);
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
@@ -130,18 +208,17 @@ export default function Home() {
       password: "",
       terms: false,
     },
-  })
+  });
 
   const onSubmit = (data: SignupFormValues) => {
     toast.success("회원가입 성공!", {
       description: `${data.name}님 환영합니다.`,
-    })
-    form.reset()
-  }
+    });
+    form.reset();
+  };
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 space-y-16">
-
       {/* ── Hero ── */}
       <section className="flex flex-col items-center gap-6 text-center py-8">
         <div className="flex items-center gap-2">
@@ -154,8 +231,9 @@ export default function Home() {
           모던 웹 스타터킷
         </h1>
         <p className="max-w-xl text-lg text-muted-foreground">
-          Next.js 16 · TypeScript · TailwindCSS v4 · ShadcnUI로 구성된 프로덕션 레디 스타터킷.
-          다크모드, 폼 검증, 반응형 레이아웃이 기본 내장되어 있습니다.
+          Next.js 16 · TypeScript · TailwindCSS v4 · ShadcnUI로 구성된 프로덕션
+          레디 스타터킷. 다크모드, 폼 검증, 반응형 레이아웃이 기본 내장되어
+          있습니다.
         </p>
         <div className="flex flex-wrap justify-center gap-3">
           {/* asChild: Button 스타일을 Link에 적용 — 페이지 내 컴포넌트 섹션으로 스크롤 */}
@@ -167,7 +245,11 @@ export default function Home() {
           </Button>
           {/* 외부 링크: Next.js 공식 문서 */}
           <Button size="lg" variant="outline" className="gap-2" asChild>
-            <a href="https://nextjs.org/docs" target="_blank" rel="noopener noreferrer">
+            <a
+              href="https://nextjs.org/docs"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <Package className="size-4" />
               문서 보기
             </a>
@@ -201,7 +283,10 @@ export default function Home() {
       <Separator />
 
       {/* ── 기술 스택 ── */}
-      <Section title="기술 스택" description="이 스타터킷을 구성하는 라이브러리">
+      <Section
+        title="기술 스택"
+        description="이 스타터킷을 구성하는 라이브러리"
+      >
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
           {[
             { icon: Layers, label: "Next.js 16", color: "text-foreground" },
@@ -209,7 +294,6 @@ export default function Home() {
             { icon: Palette, label: "Tailwind v4", color: "text-sky-500" },
             { icon: Package, label: "ShadcnUI", color: "text-foreground" },
             { icon: Zap, label: "Zod", color: "text-amber-500" },
-            { icon: CheckCircle2, label: "RHF", color: "text-emerald-500" },
           ].map(({ icon: Icon, label, color }) => (
             <Card key={label} size="sm" className="items-center text-center">
               <CardContent className="flex flex-col items-center gap-2 pt-4 pb-4">
@@ -230,7 +314,9 @@ export default function Home() {
         <div className="space-y-8">
           {/* Button */}
           <div className="space-y-3">
-            <h3 className="text-sm font-medium text-muted-foreground">Button variants</h3>
+            <h3 className="text-sm font-medium text-muted-foreground">
+              Button variants
+            </h3>
             <div className="flex flex-wrap gap-2">
               <Button variant="default">Default</Button>
               <Button variant="secondary">Secondary</Button>
@@ -265,7 +351,9 @@ export default function Home() {
 
           {/* Avatar */}
           <div className="space-y-3">
-            <h3 className="text-sm font-medium text-muted-foreground">Avatar</h3>
+            <h3 className="text-sm font-medium text-muted-foreground">
+              Avatar
+            </h3>
             <div className="flex flex-wrap items-center gap-4">
               <Avatar size="sm">
                 <AvatarImage src="https://github.com/shadcn.png" alt="shadcn" />
@@ -295,7 +383,9 @@ export default function Home() {
 
           {/* Input / Textarea */}
           <div className="space-y-3">
-            <h3 className="text-sm font-medium text-muted-foreground">Input & Textarea</h3>
+            <h3 className="text-sm font-medium text-muted-foreground">
+              Input & Textarea
+            </h3>
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="space-y-1.5">
                 <Label htmlFor="sample-input">이름</Label>
@@ -303,11 +393,19 @@ export default function Home() {
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="sample-email">이메일</Label>
-                <Input id="sample-email" type="email" placeholder="email@example.com" />
+                <Input
+                  id="sample-email"
+                  type="email"
+                  placeholder="email@example.com"
+                />
               </div>
               <div className="space-y-1.5 sm:col-span-2">
                 <Label htmlFor="sample-textarea">메시지</Label>
-                <Textarea id="sample-textarea" placeholder="내용을 입력하세요" rows={3} />
+                <Textarea
+                  id="sample-textarea"
+                  placeholder="내용을 입력하세요"
+                  rows={3}
+                />
               </div>
             </div>
           </div>
@@ -316,7 +414,9 @@ export default function Home() {
 
           {/* Switch / Checkbox / Progress / Skeleton */}
           <div className="space-y-3">
-            <h3 className="text-sm font-medium text-muted-foreground">Switch · Checkbox · Progress · Skeleton</h3>
+            <h3 className="text-sm font-medium text-muted-foreground">
+              Switch · Checkbox · Progress · Skeleton
+            </h3>
             <div className="grid gap-6 sm:grid-cols-2">
               <div className="flex items-center gap-3">
                 <Switch
@@ -343,10 +443,18 @@ export default function Home() {
                 </div>
                 <Progress value={progress} />
                 <div className="flex gap-2">
-                  <Button size="xs" variant="outline" onClick={() => setProgress((p) => Math.max(0, p - 10))}>
+                  <Button
+                    size="xs"
+                    variant="outline"
+                    onClick={() => setProgress((p) => Math.max(0, p - 10))}
+                  >
                     -10
                   </Button>
-                  <Button size="xs" variant="outline" onClick={() => setProgress((p) => Math.min(100, p + 10))}>
+                  <Button
+                    size="xs"
+                    variant="outline"
+                    onClick={() => setProgress((p) => Math.min(100, p + 10))}
+                  >
                     +10
                   </Button>
                 </div>
@@ -369,20 +477,29 @@ export default function Home() {
       <Separator />
 
       {/* ── Molecules ── */}
-      <Section title="Molecules — 분자 컴포넌트" description="원자들의 조합으로 이루어진 기능 단위">
+      <Section
+        title="Molecules — 분자 컴포넌트"
+        description="원자들의 조합으로 이루어진 기능 단위"
+      >
         <div className="space-y-6">
           {/* Cards */}
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <Card>
               <CardHeader>
                 <CardTitle>기본 카드</CardTitle>
-                <CardDescription>CardHeader, CardTitle, CardDescription 사용</CardDescription>
+                <CardDescription>
+                  CardHeader, CardTitle, CardDescription 사용
+                </CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground">카드 본문 영역입니다. 다양한 콘텐츠를 배치할 수 있습니다.</p>
+                <p className="text-sm text-muted-foreground">
+                  카드 본문 영역입니다. 다양한 콘텐츠를 배치할 수 있습니다.
+                </p>
               </CardContent>
               <CardFooter>
-                <Button size="sm" variant="outline">자세히 보기</Button>
+                <Button size="sm" variant="outline">
+                  자세히 보기
+                </Button>
               </CardFooter>
             </Card>
 
@@ -395,7 +512,9 @@ export default function Home() {
                 </CardAction>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground">오른쪽 상단에 액션 영역을 추가할 수 있습니다.</p>
+                <p className="text-sm text-muted-foreground">
+                  오른쪽 상단에 액션 영역을 추가할 수 있습니다.
+                </p>
               </CardContent>
             </Card>
 
@@ -406,7 +525,8 @@ export default function Home() {
               <CardContent>
                 <div className="text-3xl font-bold">12,400</div>
                 <p className="text-xs text-muted-foreground mt-1">
-                  지난달 대비 <span className="text-emerald-500 font-medium">+12%</span>
+                  지난달 대비{" "}
+                  <span className="text-emerald-500 font-medium">+12%</span>
                 </p>
               </CardContent>
             </Card>
@@ -417,12 +537,16 @@ export default function Home() {
             <Alert>
               <Info className="size-4" />
               <AlertTitle>안내</AlertTitle>
-              <AlertDescription>기본 안내 메시지입니다. 사용자에게 정보를 전달합니다.</AlertDescription>
+              <AlertDescription>
+                기본 안내 메시지입니다. 사용자에게 정보를 전달합니다.
+              </AlertDescription>
             </Alert>
             <Alert variant="destructive">
               <AlertCircle className="size-4" />
               <AlertTitle>오류 발생</AlertTitle>
-              <AlertDescription>오류가 발생했습니다. 다시 시도해주세요.</AlertDescription>
+              <AlertDescription>
+                오류가 발생했습니다. 다시 시도해주세요.
+              </AlertDescription>
             </Alert>
           </div>
 
@@ -465,7 +589,9 @@ export default function Home() {
         <Card className="max-w-lg">
           <CardHeader>
             <CardTitle>회원가입</CardTitle>
-            <CardDescription>정보를 입력하고 제출하면 zod 검증이 실행됩니다</CardDescription>
+            <CardDescription>
+              정보를 입력하고 제출하면 zod 검증이 실행됩니다
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -479,7 +605,9 @@ export default function Home() {
                   {...form.register("name")}
                 />
                 {form.formState.errors.name && (
-                  <p className="text-xs text-destructive">{form.formState.errors.name.message}</p>
+                  <p className="text-xs text-destructive">
+                    {form.formState.errors.name.message}
+                  </p>
                 )}
               </div>
 
@@ -494,7 +622,9 @@ export default function Home() {
                   {...form.register("email")}
                 />
                 {form.formState.errors.email && (
-                  <p className="text-xs text-destructive">{form.formState.errors.email.message}</p>
+                  <p className="text-xs text-destructive">
+                    {form.formState.errors.email.message}
+                  </p>
                 )}
               </div>
 
@@ -509,14 +639,20 @@ export default function Home() {
                   {...form.register("password")}
                 />
                 {form.formState.errors.password && (
-                  <p className="text-xs text-destructive">{form.formState.errors.password.message}</p>
+                  <p className="text-xs text-destructive">
+                    {form.formState.errors.password.message}
+                  </p>
                 )}
               </div>
 
               {/* 역할 Select */}
               <div className="space-y-1.5">
                 <Label>역할 *</Label>
-                <Select onValueChange={(v) => form.setValue("role", v as SignupFormValues["role"])}>
+                <Select
+                  onValueChange={(v) =>
+                    form.setValue("role", v as SignupFormValues["role"])
+                  }
+                >
                   <SelectTrigger aria-invalid={!!form.formState.errors.role}>
                     <SelectValue placeholder="역할을 선택하세요" />
                   </SelectTrigger>
@@ -527,7 +663,9 @@ export default function Home() {
                   </SelectContent>
                 </Select>
                 {form.formState.errors.role && (
-                  <p className="text-xs text-destructive">{form.formState.errors.role.message}</p>
+                  <p className="text-xs text-destructive">
+                    {form.formState.errors.role.message}
+                  </p>
                 )}
               </div>
 
@@ -537,13 +675,19 @@ export default function Home() {
                   <Checkbox
                     id="terms"
                     checked={form.watch("terms")}
-                    onCheckedChange={(v) => form.setValue("terms", v as boolean)}
+                    onCheckedChange={(v) =>
+                      form.setValue("terms", v as boolean)
+                    }
                     aria-invalid={!!form.formState.errors.terms}
                   />
-                  <Label htmlFor="terms" className="cursor-pointer">이용약관에 동의합니다</Label>
+                  <Label htmlFor="terms" className="cursor-pointer">
+                    이용약관에 동의합니다
+                  </Label>
                 </div>
                 {form.formState.errors.terms && (
-                  <p className="text-xs text-destructive">{form.formState.errors.terms.message}</p>
+                  <p className="text-xs text-destructive">
+                    {form.formState.errors.terms.message}
+                  </p>
                 )}
               </div>
 
@@ -576,21 +720,27 @@ export default function Home() {
               <TabsContent value="overview" className="mt-4">
                 <Card size="sm">
                   <CardContent className="pt-4">
-                    <p className="text-sm text-muted-foreground">개요 탭 콘텐츠입니다.</p>
+                    <p className="text-sm text-muted-foreground">
+                      개요 탭 콘텐츠입니다.
+                    </p>
                   </CardContent>
                 </Card>
               </TabsContent>
               <TabsContent value="analytics" className="mt-4">
                 <Card size="sm">
                   <CardContent className="pt-4">
-                    <p className="text-sm text-muted-foreground">분석 탭 콘텐츠입니다.</p>
+                    <p className="text-sm text-muted-foreground">
+                      분석 탭 콘텐츠입니다.
+                    </p>
                   </CardContent>
                 </Card>
               </TabsContent>
               <TabsContent value="settings" className="mt-4">
                 <Card size="sm">
                   <CardContent className="pt-4">
-                    <p className="text-sm text-muted-foreground">설정 탭 콘텐츠입니다.</p>
+                    <p className="text-sm text-muted-foreground">
+                      설정 탭 콘텐츠입니다.
+                    </p>
                   </CardContent>
                 </Card>
               </TabsContent>
@@ -601,24 +751,31 @@ export default function Home() {
 
           {/* Accordion */}
           <div className="space-y-3">
-            <h3 className="text-sm font-medium text-muted-foreground">Accordion</h3>
+            <h3 className="text-sm font-medium text-muted-foreground">
+              Accordion
+            </h3>
             <Accordion type="single" collapsible className="max-w-lg">
               <AccordionItem value="item-1">
                 <AccordionTrigger>Next.js App Router란?</AccordionTrigger>
                 <AccordionContent>
-                  App Router는 React Server Components를 기반으로 한 새로운 라우팅 시스템입니다.
+                  App Router는 React Server Components를 기반으로 한 새로운
+                  라우팅 시스템입니다.
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="item-2">
                 <AccordionTrigger>TailwindCSS v4의 변경점은?</AccordionTrigger>
                 <AccordionContent>
-                  v4에서는 CSS-first 설정, 새로운 oklch 색상 시스템, 더 빠른 빌드 속도가 도입되었습니다.
+                  v4에서는 CSS-first 설정, 새로운 oklch 색상 시스템, 더 빠른
+                  빌드 속도가 도입되었습니다.
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="item-3">
-                <AccordionTrigger>ShadcnUI radix-nova 스타일이란?</AccordionTrigger>
+                <AccordionTrigger>
+                  ShadcnUI radix-nova 스타일이란?
+                </AccordionTrigger>
                 <AccordionContent>
-                  radix-nova는 ShadcnUI의 새로운 기본 스타일로, 더 세련된 디자인 토큰을 제공합니다.
+                  radix-nova는 ShadcnUI의 새로운 기본 스타일로, 더 세련된 디자인
+                  토큰을 제공합니다.
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
@@ -628,7 +785,9 @@ export default function Home() {
 
           {/* Dialog / Sheet / Dropdown */}
           <div className="space-y-3">
-            <h3 className="text-sm font-medium text-muted-foreground">Dialog · Sheet · Dropdown · Command</h3>
+            <h3 className="text-sm font-medium text-muted-foreground">
+              Dialog · Sheet · Dropdown · Command
+            </h3>
             <div className="flex flex-wrap gap-3">
               {/* Dialog */}
               <Dialog>
@@ -639,7 +798,8 @@ export default function Home() {
                   <DialogHeader>
                     <DialogTitle>다이얼로그 제목</DialogTitle>
                     <DialogDescription>
-                      중요한 작업을 수행하기 전 사용자 확인을 요청하는 모달입니다.
+                      중요한 작업을 수행하기 전 사용자 확인을 요청하는
+                      모달입니다.
                     </DialogDescription>
                   </DialogHeader>
                   <p className="text-sm text-muted-foreground">
@@ -742,36 +902,44 @@ export default function Home() {
         <div className="flex flex-wrap gap-3">
           <Button
             variant="outline"
-            onClick={() => toast("기본 알림", { description: "일반 메시지입니다." })}
+            onClick={() =>
+              toast("기본 알림", { description: "일반 메시지입니다." })
+            }
           >
             기본
           </Button>
           <Button
             variant="outline"
             className="text-emerald-600 border-emerald-200 hover:bg-emerald-50 dark:border-emerald-800 dark:hover:bg-emerald-950/30"
-            onClick={() => toast.success("성공!", { description: "작업이 완료되었습니다." })}
+            onClick={() =>
+              toast.success("성공!", { description: "작업이 완료되었습니다." })
+            }
           >
             <CheckCircle2 className="size-4" /> 성공
           </Button>
           <Button
             variant="outline"
             className="text-destructive border-destructive/30 hover:bg-destructive/5"
-            onClick={() => toast.error("오류 발생", { description: "다시 시도해주세요." })}
+            onClick={() =>
+              toast.error("오류 발생", { description: "다시 시도해주세요." })
+            }
           >
             <AlertCircle className="size-4" /> 오류
           </Button>
           <Button
             variant="outline"
             className="text-blue-600 border-blue-200 hover:bg-blue-50 dark:border-blue-800 dark:hover:bg-blue-950/30"
-            onClick={() => toast.info("안내", { description: "참고할 정보가 있습니다." })}
+            onClick={() =>
+              toast.info("안내", { description: "참고할 정보가 있습니다." })
+            }
           >
             <Info className="size-4" /> 정보
           </Button>
           <Button
             variant="outline"
             onClick={() => {
-              const id = toast.loading("처리 중...")
-              setTimeout(() => toast.success("완료!", { id }), 2000)
+              const id = toast.loading("처리 중...");
+              setTimeout(() => toast.success("완료!", { id }), 2000);
             }}
           >
             <Bell className="size-4" /> 로딩 → 완료
@@ -799,7 +967,9 @@ export default function Home() {
             <TableBody>
               {tableData.map((row) => (
                 <TableRow key={row.id}>
-                  <TableCell className="text-muted-foreground">{row.id}</TableCell>
+                  <TableCell className="text-muted-foreground">
+                    {row.id}
+                  </TableCell>
                   <TableCell className="font-medium">
                     <div className="flex items-center gap-2">
                       <Avatar size="sm">
@@ -808,7 +978,9 @@ export default function Home() {
                       {row.name}
                     </div>
                   </TableCell>
-                  <TableCell className="text-muted-foreground">{row.email}</TableCell>
+                  <TableCell className="text-muted-foreground">
+                    {row.email}
+                  </TableCell>
                   <TableCell>
                     <Badge variant="secondary">{row.role}</Badge>
                   </TableCell>
@@ -840,7 +1012,6 @@ export default function Home() {
           </Table>
         </Card>
       </Section>
-
     </div>
-  )
+  );
 }
