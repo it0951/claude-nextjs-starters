@@ -35,6 +35,9 @@ export function Footer() {
             ))}
           </div>
           <Separator className="max-w-xs" />
+          <p className="text-center text-xs text-muted-foreground">
+            © {currentYear} Next Starter Kit. 모던 웹 개발을 위한 스타터킷.
+          </p>
         </div>
       </div>
     </footer>
