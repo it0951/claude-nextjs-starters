@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
@@ -137,6 +137,16 @@ const signupSchema = z.object({
 });
 
 type SignupFormValues = z.infer<typeof signupSchema>;
+
+// 기술 스택 목록 — 렌더링마다 새 배열 참조 생성을 방지하기 위해 컴포넌트 외부에 선언
+const TECH_STACK_ITEMS = [
+  { icon: Layers, label: "Next.js 16", color: "text-foreground" },
+  { icon: Code2, label: "TypeScript", color: "text-blue-500" },
+  { icon: Palette, label: "Tailwind v4", color: "text-sky-500" },
+  { icon: Package, label: "ShadcnUI", color: "text-foreground" },
+  { icon: Zap, label: "Zod", color: "text-amber-500" },
+  { icon: CheckCircle2, label: "RHF", color: "text-emerald-500" },
+] as const;
 
 // 샘플 테이블 데이터
 const tableData = [
@@ -288,14 +298,7 @@ export default function Home() {
         description="이 스타터킷을 구성하는 라이브러리"
       >
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-          {[
-            { icon: Layers, label: "Next.js 16", color: "text-foreground" },
-            { icon: Code2, label: "TypeScript", color: "text-blue-500" },
-            { icon: Palette, label: "Tailwind v4", color: "text-sky-500" },
-            { icon: Package, label: "ShadcnUI", color: "text-foreground" },
-            { icon: Zap, label: "Zod", color: "text-amber-500" },
-            { icon: CheckCircle2, label: "RHF", color: "text-emerald-500" },
-          ].map(({ icon: Icon, label, color }) => (
+          {TECH_STACK_ITEMS.map(({ icon: Icon, label, color }) => (
             <Card key={label} size="sm" className="items-center text-center">
               <CardContent className="flex flex-col items-center gap-2 pt-4 pb-4">
                 <Icon className={`size-6 ${color}`} />
@@ -433,7 +436,9 @@ export default function Home() {
                 <Checkbox
                   id="demo-checkbox"
                   checked={checked}
-                  onCheckedChange={(v) => setChecked(v as boolean)}
+                  onCheckedChange={(v) => {
+                    if (v !== "indeterminate") setChecked(v)
+                  }}
                 />
                 <Label htmlFor="demo-checkbox">이용약관 동의</Label>
               </div>
@@ -603,10 +608,11 @@ export default function Home() {
                   id="name"
                   placeholder="홍길동"
                   aria-invalid={!!form.formState.errors.name}
+                  aria-describedby={form.formState.errors.name ? "name-error" : undefined}
                   {...form.register("name")}
                 />
                 {form.formState.errors.name && (
-                  <p className="text-xs text-destructive">
+                  <p id="name-error" className="text-xs text-destructive">
                     {form.formState.errors.name.message}
                   </p>
                 )}
@@ -620,10 +626,11 @@ export default function Home() {
                   type="email"
                   placeholder="email@example.com"
                   aria-invalid={!!form.formState.errors.email}
+                  aria-describedby={form.formState.errors.email ? "email-error" : undefined}
                   {...form.register("email")}
                 />
                 {form.formState.errors.email && (
-                  <p className="text-xs text-destructive">
+                  <p id="email-error" className="text-xs text-destructive">
                     {form.formState.errors.email.message}
                   </p>
                 )}
@@ -637,56 +644,71 @@ export default function Home() {
                   type="password"
                   placeholder="8자 이상"
                   aria-invalid={!!form.formState.errors.password}
+                  aria-describedby={form.formState.errors.password ? "password-error" : undefined}
                   {...form.register("password")}
                 />
                 {form.formState.errors.password && (
-                  <p className="text-xs text-destructive">
+                  <p id="password-error" className="text-xs text-destructive">
                     {form.formState.errors.password.message}
                   </p>
                 )}
               </div>
 
-              {/* 역할 Select */}
+              {/* 역할 Select — Controller로 타입 단언 없이 안전하게 연결 */}
               <div className="space-y-1.5">
-                <Label>역할 *</Label>
-                <Select
-                  onValueChange={(v) =>
-                    form.setValue("role", v as SignupFormValues["role"])
-                  }
-                >
-                  <SelectTrigger aria-invalid={!!form.formState.errors.role}>
-                    <SelectValue placeholder="역할을 선택하세요" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="developer">개발자</SelectItem>
-                    <SelectItem value="designer">디자이너</SelectItem>
-                    <SelectItem value="manager">매니저</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Label htmlFor="role-select">역할 *</Label>
+                <Controller
+                  control={form.control}
+                  name="role"
+                  render={({ field }) => (
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <SelectTrigger
+                        id="role-select"
+                        aria-invalid={!!form.formState.errors.role}
+                        aria-describedby={form.formState.errors.role ? "role-error" : undefined}
+                      >
+                        <SelectValue placeholder="역할을 선택하세요" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="developer">개발자</SelectItem>
+                        <SelectItem value="designer">디자이너</SelectItem>
+                        <SelectItem value="manager">매니저</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
                 {form.formState.errors.role && (
-                  <p className="text-xs text-destructive">
+                  <p id="role-error" className="text-xs text-destructive">
                     {form.formState.errors.role.message}
                   </p>
                 )}
               </div>
 
-              {/* 약관 동의 */}
+              {/* 약관 동의 — Controller로 타입 단언 없이 안전하게 연결 */}
               <div className="space-y-1.5">
                 <div className="flex items-center gap-2">
-                  <Checkbox
-                    id="terms"
-                    checked={form.watch("terms")}
-                    onCheckedChange={(v) =>
-                      form.setValue("terms", v as boolean)
-                    }
-                    aria-invalid={!!form.formState.errors.terms}
+                  <Controller
+                    control={form.control}
+                    name="terms"
+                    render={({ field }) => (
+                      <Checkbox
+                        id="terms"
+                        checked={field.value}
+                        onCheckedChange={(checked) => {
+                          // "indeterminate" 상태는 boolean 필드에 무시
+                          if (checked !== "indeterminate") field.onChange(checked)
+                        }}
+                        aria-invalid={!!form.formState.errors.terms}
+                        aria-describedby={form.formState.errors.terms ? "terms-error" : undefined}
+                      />
+                    )}
                   />
                   <Label htmlFor="terms" className="cursor-pointer">
                     이용약관에 동의합니다
                   </Label>
                 </div>
                 {form.formState.errors.terms && (
-                  <p className="text-xs text-destructive">
+                  <p id="terms-error" className="text-xs text-destructive">
                     {form.formState.errors.terms.message}
                   </p>
                 )}
@@ -704,7 +726,7 @@ export default function Home() {
 
       {/* ── Organisms ── */}
       <Section
-        id="components"
+        id="organisms"
         title="Organisms — 복합 컴포넌트"
         description="복잡한 인터랙션을 담당하는 UI 섹션"
       >

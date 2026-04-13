@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import Link from "next/link"
 import { useTheme } from "next-themes"
 import { Moon, Sun, Zap, Menu } from "lucide-react"
@@ -21,10 +22,12 @@ const navLinks = [
 ]
 
 export function Navbar() {
-  const { theme, setTheme } = useTheme()
+  // resolvedTheme: "system" 설정 시 실제 적용된 테마(light/dark)를 반환
+  const { resolvedTheme, setTheme } = useTheme()
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark")
+    setTheme(resolvedTheme === "dark" ? "light" : "dark")
   }
 
   return (
@@ -62,8 +65,8 @@ export function Navbar() {
             <Moon className="absolute size-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
           </Button>
 
-          {/* 모바일 햄버거 메뉴 */}
-          <Sheet>
+          {/* 모바일 햄버거 메뉴 — open 상태 직접 제어하여 링크 클릭 시 자동 닫힘 */}
+          <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
             <SheetTrigger asChild>
               <Button
                 variant="ghost"
@@ -87,6 +90,7 @@ export function Navbar() {
                   <Link
                     key={link.href}
                     href={link.href}
+                    onClick={() => setMobileMenuOpen(false)}
                     className="rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                   >
                     {link.label}
