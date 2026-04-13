@@ -294,6 +294,7 @@ export default function Home() {
             { icon: Palette, label: "Tailwind v4", color: "text-sky-500" },
             { icon: Package, label: "ShadcnUI", color: "text-foreground" },
             { icon: Zap, label: "Zod", color: "text-amber-500" },
+            { icon: CheckCircle2, label: "RHF", color: "text-emerald-500" },
           ].map(({ icon: Icon, label, color }) => (
             <Card key={label} size="sm" className="items-center text-center">
               <CardContent className="flex flex-col items-center gap-2 pt-4 pb-4">
