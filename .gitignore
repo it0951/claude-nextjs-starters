@@ -32,6 +32,9 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+# 템플릿은 커밋 대상 (실제 값 없이 키만 포함)
+!.env.local.example
+!.env.example
 
 # vercel
 .vercel
