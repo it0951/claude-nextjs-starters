@@ -47,3 +47,8 @@ next-env.d.ts
 .playwright-mcp/
 dev.log
 log/
+
+# 스파이크 / 로컬 전용 파일
+hook-test.txt
+shrimp_data/
+shrimp-rules.md

@@ -181,7 +181,12 @@ export function ShareDialog({
 
           {/* 아직 생성 전일 때만 생성 버튼 표시 */}
           {!generatedUrl && (
-            <Button type="button" onClick={handleCreate} disabled={isLoading}>
+            <Button
+              type="button"
+              onClick={handleCreate}
+              disabled={isLoading}
+              aria-busy={isLoading}
+            >
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />

@@ -4,16 +4,28 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 @AGENTS.md
 
-## 명령어
+## 상세 프로젝트 요구사항은 @/docs/PRD.md 참조
+
+## 자주 사용하는 명령어
 
 ```bash
 npm run dev      # 개발 서버 (0.0.0.0:3000)
 npm run build    # 프로덕션 빌드
 npm run start    # 프로덕션 서버
 npm run lint     # ESLint 검사
+npm run check-all   # 모든 검사 통합 실행 (권장)
 ```
 
-개발 서버가 이미 실행 중이면 포트 3001, 3002 순으로 자동 증가. 충돌 시 `.next/dev/lock` 삭제.  
+## ✅ 작업 완료 체크리스트
+
+```bash
+npm run check-all   # 모든 검사 통과 확인
+npm run build       # 빌드 성공 확인
+```
+
+개발 서버가 이미 실행 중이면 포트 3000 kill 2번 시도 후
+계속 3000번이 살아 있으면
+포트 3001, 3002 순으로 자동 증가. 충돌 시 `.next/dev/lock` 삭제.  
 캐시 오류(Turbopack panic)가 발생하면 `.next/` 디렉터리 전체 삭제 후 재시작.
 
 ## 기술 스택
@@ -67,13 +79,13 @@ npx shadcn@latest add [component-name]
 
 ## MCP 서버
 
-| 서버                | 용도                                          |
-| ------------------- | --------------------------------------------- |
-| playwright          | 브라우저 자동화 및 UI 테스트                  |
-| context7            | 라이브러리 최신 문서 조회                     |
-| sequential-thinking | 복잡한 문제의 단계적 사고                     |
-| shadcn              | ShadcnUI 컴포넌트 탐색 및 설치               |
-| github              | PR/이슈 관리, 코드 리뷰, 저장소 검색          |
+| 서버                | 용도                                 |
+| ------------------- | ------------------------------------ |
+| playwright          | 브라우저 자동화 및 UI 테스트         |
+| context7            | 라이브러리 최신 문서 조회            |
+| sequential-thinking | 복잡한 문제의 단계적 사고            |
+| shadcn              | ShadcnUI 컴포넌트 탐색 및 설치       |
+| github              | PR/이슈 관리, 코드 리뷰, 저장소 검색 |
 
 **GitHub MCP 사용 전 필수**: 환경변수 `GITHUB_PERSONAL_ACCESS_TOKEN` 설정 필요.  
 토큰 발급: GitHub → Settings → Developer settings → Personal access tokens → Fine-grained tokens
@@ -81,7 +93,7 @@ npx shadcn@latest add [component-name]
 ## 주요 주의사항
 
 - **`allowedDevOrigins`**: `next.config.ts`에 IP 기본값 `192.168.41.157` 고정.  
-  네트워크 환경 변경 시 `DEV_ORIGIN` 환경변수로 동적 설정 가능:  
+  네트워크 환경 변경 시 `DEV_ORIGIN` 환경변수로 동적 설정 가능:
   ```bash
   DEV_ORIGIN=192.168.1.100 npm run dev
   ```

@@ -98,6 +98,7 @@ export function RevokeDialog({
             variant="destructive"
             onClick={handleRevoke}
             disabled={isLoading}
+            aria-busy={isLoading}
           >
             {isLoading ? (
               <>
