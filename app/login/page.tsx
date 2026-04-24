@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
 import { Loader2, Lock, Mail } from "lucide-react";
+import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { signInAction } from "@/lib/auth/actions";
 
 import { Button } from "@/components/ui/button";
@@ -55,7 +56,9 @@ export default function LoginPage() {
       if (errorMessage) {
         toast.error(errorMessage);
       }
-    } catch {
+    } catch (error) {
+      // NEXT_REDIRECT는 성공적인 리다이렉트 신호이므로 다시 throw
+      if (isRedirectError(error)) throw error;
       toast.error("로그인 중 오류가 발생했습니다. 다시 시도해주세요.");
     } finally {
       setIsLoading(false);
