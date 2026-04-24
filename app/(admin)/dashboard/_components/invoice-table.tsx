@@ -13,7 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, ExternalLink } from "lucide-react";
 import type { Invoice, InvoiceStatus } from "@/types/invoice";
 import { InvoiceTableSkeleton } from "./invoice-table-skeleton";
 import { ShareDialog } from "./share-dialog";
@@ -116,7 +116,33 @@ function InvoiceCard({
         <Badge variant={shareStatus.variant}>{shareStatus.label}</Badge>
       </div>
 
-      <div className="pt-1">
+      <div className="pt-1 space-y-2">
+        {/* 상세보기 버튼 */}
+        {active ? (
+          <Button variant="outline" size="sm" className="w-full" asChild>
+            <a
+              href={`/invoice/${invoice.shareToken!}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <ExternalLink className="mr-2 h-4 w-4" />
+              상세보기
+            </a>
+          </Button>
+        ) : (
+          <Button
+            variant="outline"
+            size="sm"
+            className="w-full"
+            disabled
+            title="공유 링크 생성 후 상세보기 가능"
+          >
+            <ExternalLink className="mr-2 h-4 w-4" />
+            상세보기
+          </Button>
+        )}
+
+        {/* 기존 공유/회수 버튼 (아래로 이동) */}
         {active ? (
           <Button
             variant="outline"
@@ -281,24 +307,56 @@ export function InvoiceTable() {
 
                   {/* 액션 버튼 */}
                   <TableCell>
-                    {active ? (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="text-destructive border-destructive hover:bg-destructive/10"
-                        onClick={() => setRevokeDialogInvoice(invoice)}
-                      >
-                        회수
-                      </Button>
-                    ) : (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setShareDialogInvoice(invoice)}
-                      >
-                        공유 링크 생성
-                      </Button>
-                    )}
+                    <div className="flex items-center gap-1">
+                      {/* 상세보기 아이콘 버튼 */}
+                      {active ? (
+                        <Button
+                          variant="ghost"
+                          size="icon-sm"
+                          asChild
+                          title="새 탭에서 상세보기"
+                        >
+                          <a
+                            href={`/invoice/${invoice.shareToken!}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <ExternalLink className="h-4 w-4" />
+                            <span className="sr-only">상세보기</span>
+                          </a>
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="ghost"
+                          size="icon-sm"
+                          disabled
+                          title="공유 링크 생성 후 상세보기 가능"
+                        >
+                          <ExternalLink className="h-4 w-4" />
+                          <span className="sr-only">상세보기 불가</span>
+                        </Button>
+                      )}
+
+                      {/* 기존 공유/회수 버튼 */}
+                      {active ? (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="text-destructive border-destructive hover:bg-destructive/10"
+                          onClick={() => setRevokeDialogInvoice(invoice)}
+                        >
+                          회수
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setShareDialogInvoice(invoice)}
+                        >
+                          공유 링크 생성
+                        </Button>
+                      )}
+                    </div>
                   </TableCell>
                 </TableRow>
               );

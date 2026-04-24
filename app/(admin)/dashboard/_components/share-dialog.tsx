@@ -130,7 +130,7 @@ export function ShareDialog({
                 <SelectTrigger id="expires-select" className="w-full">
                   <SelectValue placeholder="만료 기간 선택" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent position="popper">
                   {EXPIRES_OPTIONS.map((opt) => (
                     <SelectItem key={opt.value} value={opt.value}>
                       {opt.label}
@@ -145,7 +145,7 @@ export function ShareDialog({
           {generatedUrl && (
             <div className="space-y-2">
               <Label>생성된 공유 링크</Label>
-              <div className="flex items-center gap-2 rounded-md border bg-muted/50 px-3 py-2">
+              <div className="flex min-w-0 items-center gap-2 rounded-md border bg-muted/50 px-3 py-2">
                 <Link className="h-4 w-4 shrink-0 text-muted-foreground" />
                 <span className="flex-1 truncate text-sm text-muted-foreground">
                   {generatedUrl}
@@ -169,7 +169,7 @@ export function ShareDialog({
           )}
         </div>
 
-        <DialogFooter className="flex-col-reverse sm:flex-row sm:justify-end gap-2">
+        <DialogFooter>
           <Button
             type="button"
             variant="outline"

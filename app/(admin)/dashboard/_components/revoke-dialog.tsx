@@ -84,7 +84,7 @@ export function RevokeDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <DialogFooter className="flex-col-reverse sm:flex-row sm:justify-end gap-2">
+        <DialogFooter>
           <Button
             type="button"
             variant="outline"
